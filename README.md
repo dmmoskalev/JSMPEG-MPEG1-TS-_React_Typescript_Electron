@@ -42,4 +42,8 @@ node websocket-relay.js supersecret 8081 8082
 
 ffmpeg -i rtsp://<user>:<pass>@<camera_ip>:554 -f mpegts -codec:v mpeg1video -r 20 -codec:a mp2 -ar 44100 http://localhost:8081/supersecret
 ```
-
+In App.tsx file please change link for localhost page as 
+```shell
+videoUrl="ws://127.0.0.1:8082"
+```
+Now you should see iup cam stream in Electron window
