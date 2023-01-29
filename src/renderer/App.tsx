@@ -22,9 +22,9 @@ const Hello = () => {
         <header className="App-header">
           <JsmpegPlayer
             wrapperClassName="video-wrapper"
-            videoUrl="https://cycjimmy.github.io/staticFiles/media/big_buck_bunny_640x360.ts"
+            // videoUrl="https://cycjimmy.github.io/staticFiles/media/big_buck_bunny_640x360.ts"
             // videoUrl="rtsp://admin:Admin123@212.233.126.11:40013/MediaInput/h264/stream_3"
-            // videoUrl="ws://127.0.0.1:9999"
+            videoUrl="ws://127.0.0.1:8082"
             options={videoOptions}
             overlayOptions={videoOverlayOptions}
             onRef={(
