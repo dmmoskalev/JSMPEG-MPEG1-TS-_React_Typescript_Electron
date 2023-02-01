@@ -33,9 +33,7 @@ ipcMain.on('ipc-example', async (event, arg) => {
 
   //  start bash rtsp script here
   const livpath = path.normalize(`${__dirname}/../`); // go up along file tree to get lib directory
-  const script = ChildProcess.spawn('bash', [
-    `${livpath}/lib/origin-jsmpeg/run.sh`,
-  ]);
+  const script = ChildProcess.spawn('bash', [`${livpath}/lib/run.sh`]);
   console.log(`PID: ${script.pid}`);
 
   script.stdout.on('data', (data) => {

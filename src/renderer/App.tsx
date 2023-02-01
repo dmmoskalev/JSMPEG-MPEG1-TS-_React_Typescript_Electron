@@ -6,6 +6,7 @@ import JsmpegPlayer from '../components/JsmpegPlayer';
 
 const videoOptions = {
   poster: 'https://booco.ru/wp-content/uploads/2022/04/logo.png',
+  // canvas: here we can send canvas fererence to hanle it later
 };
 
 const videoOverlayOptions = {};
@@ -60,7 +61,6 @@ export default function App() {
     for (let i = 0; i < streamToShow.length; i += 1) {
       streamToShow[i].isShowing = i === index;
       setCount(count + 1);
-      console.log(`index:${i} = ${streamToShow[i].isShowing}`);
     }
   }
   useEffect(() => {
