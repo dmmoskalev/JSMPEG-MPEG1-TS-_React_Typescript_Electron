@@ -12,6 +12,7 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import ChildProcess from 'child_process';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
@@ -26,9 +27,29 @@ class AppUpdater {
 let mainWindow: BrowserWindow | null = null;
 
 ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
+  const msgTemplate = (pingPong: string) => `IPC from main test: ${pingPong}`;
   console.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
+
+  //  start bash rtsp script here
+  const livpath = path.normalize(`${__dirname}/../`); // go up along file tree to get lib directory
+  const script = ChildProcess.spawn('bash', [
+    `${livpath}/lib/origin-jsmpeg/run.sh`,
+  ]);
+  console.log(`PID: ${script.pid}`);
+
+  script.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+  });
+
+  script.stderr.on('data', (err) => {
+    console.log(`stderr: ${err}`);
+  });
+
+  script.on('exit', (code) => {
+    console.log(`Exit Code: ${code}`);
+  });
+
 });
 
 if (process.env.NODE_ENV === 'production') {

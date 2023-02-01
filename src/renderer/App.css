@@ -72,7 +72,7 @@ a:hover {
 .video-wrapper {
   width: 640px;
   height: 360px;
-  background: aliceblue;
+  background: rgb(38, 133, 217);
 }
 
 .buttons-wrapper {

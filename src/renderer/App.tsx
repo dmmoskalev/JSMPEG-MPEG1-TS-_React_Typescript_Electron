@@ -1,15 +1,23 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { lazy, useEffect, useState } from 'react';
 import './App.css';
+import { nanoid } from 'nanoid';
 import JsmpegPlayer from '../components/JsmpegPlayer';
 
 const videoOptions = {
-  poster:
-    'https://cycjimmy.github.io/staticFiles/images/screenshot/big_buck_bunny_640x360.jpg',
+  poster: 'https://booco.ru/wp-content/uploads/2022/04/logo.png',
 };
 
 const videoOverlayOptions = {};
 
+const streamToShow = [
+  { id: 0, videoUrl: 'ws://127.0.0.1:8082', isShowing: false },
+  { id: 1, videoUrl: 'ws://127.0.0.1:8084', isShowing: false },
+  { id: 2, videoUrl: 'ws://127.0.0.1:8086', isShowing: false },
+];
+
 const Hello = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let jsmpegPlayer: {
     play: () => void;
     pause: () => void;
@@ -17,48 +25,71 @@ const Hello = () => {
   } | null = null;
   return (
     <div>
-      <h1>Streaming IP Camera Nodejs</h1>
+      <h1 style={{ margin: '20' }}>Streaming IP Camera Nodejs</h1>
       <div className="Hello">
-        <header className="App-header">
-          <JsmpegPlayer
-            wrapperClassName="video-wrapper"
-            // videoUrl="https://cycjimmy.github.io/staticFiles/media/big_buck_bunny_640x360.ts"
-            // videoUrl="rtsp://admin:Admin123@212.233.126.11:40013/MediaInput/h264/stream_3"
-            videoUrl="ws://127.0.0.1:8082"
-            options={videoOptions}
-            overlayOptions={videoOverlayOptions}
-            onRef={(
-              ref: {
-                play: () => void;
-                pause: () => void;
-                stop: () => void;
-              } | null
-            ) => {
-              jsmpegPlayer = ref;
-            }}
-          />
-          <div className="buttons-wrapper">
-            <button type="button" onClick={() => jsmpegPlayer?.play()}>
-              Play
-            </button>
-            <button type="button" onClick={() => jsmpegPlayer?.pause()}>
-              Pause
-            </button>
-            <button type="button" onClick={() => jsmpegPlayer?.stop()}>
-              Stop
-            </button>
-          </div>
-        </header>
+        {streamToShow.map((stream) => (
+          <header className="App-header" key={stream.id}>
+            {stream.isShowing && (
+              <JsmpegPlayer
+                wrapperClassName="video-wrapper"
+                videoUrl={stream.videoUrl}
+                options={videoOptions}
+                overlayOptions={videoOverlayOptions}
+                onRef={(
+                  ref: {
+                    play: () => void;
+                    pause: () => void;
+                    stop: () => void;
+                  } | null
+                ) => {
+                  jsmpegPlayer = ref;
+                }}
+                keyProp={stream.videoUrl}
+              />
+            )}
+          </header>
+        ))}
       </div>
     </div>
   );
 };
 
 export default function App() {
+  const [count, setCount] = useState(0);
+  function streamSelector(index: number) {
+    for (let i = 0; i < streamToShow.length; i += 1) {
+      streamToShow[i].isShowing = i === index;
+      setCount(count + 1);
+      console.log(`index:${i} = ${streamToShow[i].isShowing}`);
+    }
+  }
+  useEffect(() => {
+    console.log(`render updated`);
+  });
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Hello />} />
+        <Route
+          path="/"
+          element={
+            <>
+              <Hello />
+              <div>
+                <div className="buttons-wrapper">
+                  <button type="button" onClick={() => streamSelector(0)}>
+                    Stream 1
+                  </button>
+                  <button type="button" onClick={() => streamSelector(1)}>
+                    Stream 2
+                  </button>
+                  <button type="button" onClick={() => streamSelector(2)}>
+                    Stream 3
+                  </button>
+                </div>
+              </div>
+            </>
+          }
+        />
       </Routes>
     </Router>
   );

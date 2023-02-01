@@ -21,7 +21,7 @@ export default class JsmpegPlayer extends Component {
     );
 
     if (this.props.onRef) {
-      this.props.onRef(this)
+      this.props.onRef(this);
     }
   }
 
